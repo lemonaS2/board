@@ -23,7 +23,7 @@
 <body>
 	<div class="panel panel-default">
 		<!-- Default panel contents -->
-		<div class="panel-heading">유저 목록</div>
+		<div class="panel-heading">유저 리스트</div>
 		<div class="panel-body">
 			<span>총 유저수: ${totalCount } 건</span>
 			<button type="button" class="btn btn-default" style="float:right"><a href="/user/joinForm" style="text-decoration:none">회원가입</a></button>
