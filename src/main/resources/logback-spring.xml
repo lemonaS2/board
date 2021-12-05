@@ -8,6 +8,7 @@
 		</encoder>
 	</appender>
 	
+	<!-- 해당 경로 하위는 debug -->
 	<logger name="com.board.springboot" level="debug" />
 	
 	<root level="info">
