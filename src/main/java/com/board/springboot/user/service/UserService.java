@@ -15,4 +15,6 @@ public interface UserService {
 	public Integer saveUserInfo(UserVo vo); 
 	
 	public Integer getUserListCount(UserVo vo); 
+	
+	public Integer deleteUser(String[] deleteArr);
 }

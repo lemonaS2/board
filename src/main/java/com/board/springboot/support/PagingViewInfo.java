@@ -69,7 +69,6 @@ public class PagingViewInfo {
 				int iPage = i + startPageNum;
 				if(totalPageNum >= iPage) {
 					list.add(String.valueOf(iPage));
-					System.out.println("iPage: " + iPage);
 				}
 			}
 		}

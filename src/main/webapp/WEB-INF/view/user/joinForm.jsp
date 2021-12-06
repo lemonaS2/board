@@ -111,7 +111,7 @@
 			url: "/user/join",
 			method: "POST",
 			data: joinForm,
-			dataTye : "",
+			dataType : "",
 			success: function(data){
 				if(data == '성공'){
 					location.href="/user/userList";

@@ -1,5 +1,6 @@
 package com.board.springboot.user.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -109,7 +111,6 @@ public class UserController {
 	
 	@GetMapping("/userList")
 	public String userList(Model model, Map<String, String> paramMap) {
-		
 		UserVo paramVo = new UserVo();
 		
 		paramVo.setPageSize(10);
@@ -131,6 +132,39 @@ public class UserController {
 		model.addAttribute("pagingInfo", pagingInfo);
 		
 		return "user/userList";
+	}
+	
+	@ResponseBody
+	@PostMapping("/deleteUser")
+	public Map<String, String> deleteUser(@RequestParam(value="deleteArr[]") String[] deleteArr) {
+		
+		for(int i = 0; i < deleteArr.length; i++) {
+			System.out.println(deleteArr[i]); 
+		}
+		
+		int result = 0;
+		
+		if(deleteArr.length > 0) {
+			result = service.deleteUser(deleteArr);
+		}
+		
+		String resultCode;
+		String resultMsg;
+		
+		Map<String, String> resultMap = new HashMap<String, String>();
+		
+		if(result > 0) {
+			resultCode = "SUCCESS";
+			resultMsg = "성공";
+		}else {
+			resultCode = "FAIL";
+			resultMsg = "실패";
+		}
+		
+		resultMap.put("resultCode", resultCode);
+		resultMap.put("resultMsg", resultMsg);
+		
+		return resultMap;
 	}
 	
 }

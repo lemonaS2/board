@@ -42,5 +42,10 @@ public class UserServiceImpl implements UserService {
 		return userDao.insertUserInfo(vo);
 	}
 
+	@Override
+	public Integer deleteUser(String[] deleteArr) {
+		return userDao.deleteUser(deleteArr);
+	}
+
 	
 }

@@ -33,4 +33,8 @@ public class UserDao {
 	public Integer insertUserInfo(UserVo vo) {
 		return session.insert("com.board.springboot.user.insertUserInfo", vo);
 	}
+	
+	public Integer deleteUser(String[] deleteArr) {
+		return session.delete("com.board.springboot.user.deleteUser", deleteArr);
+	}
 }

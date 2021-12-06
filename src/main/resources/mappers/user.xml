@@ -68,4 +68,12 @@
 		
 	</insert>
 	
+	<delete id="deleteUser" parameterType="java.util.List">
+		DELETE FROM USERS
+		WHERE user_id IN
+		<foreach collection="array" item="item" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
 </mapper>

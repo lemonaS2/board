@@ -26,11 +26,13 @@
 		<div class="panel-heading">유저 리스트</div>
 		<div class="panel-body">
 			<span>총 유저수: ${totalCount } 건</span>
+			<button type="button" class="btn btn-info" style="float:right" onclick="fnDelete()">선택삭제</button>
 			<button type="button" class="btn btn-default" style="float:right"><a href="/user/joinForm" style="text-decoration:none">회원가입</a></button>
 		</div>
 		<table class="table">
 			<thead class="thead-dark">
 				<tr>
+					<th>선택</th>
 					<th>No</th>
 					<th>아이디</th>
 					<th>이름</th>
@@ -43,6 +45,7 @@
 			<tbody>
 				<c:forEach var="userList" items="${userList}" varStatus="status">
 					<tr>
+						<td><input type="checkbox" id="chk" name="chk" value="${userList.user_id}"></td>
 						<td>${status.count}</td>
 						<td>${userList.user_id}</td>
 						<td>${userList.user_name}</td>
@@ -74,5 +77,44 @@
 		  </ul>
 		</nav>
 	</div>		
+	
+	<script>
+		$(function(){
+			
+		});
+		
+		function fnDelete(){
+			
+			var deleteArr = new Array();
+			
+			$("input:checkbox[name=chk]:checked").each(function(){
+				deleteArr.push($(this).val());
+			});
+			
+			if(deleteArr != ''){
+				console.log(deleteArr);
+			}
+			
+			$.ajax({
+				url: "/user/deleteUser",
+				method: "POST",		
+				data: {deleteArr : deleteArr},
+				dataType: "",
+				success: function(data){
+					if(data.resultCode == 'SUCCESS'){
+						alert("성공");
+						location.reload();
+					}else if(data.resultCode == 'FAIL'){
+						alert("실패");
+						location.reload();
+					}
+				},
+				error: function(request, status, error){
+					
+				}
+			});
+			
+		}	
+	</script>
 </body>
 </html>

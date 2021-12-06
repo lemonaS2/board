@@ -1,7 +1,6 @@
 package com.board.springboot.user.vo;
 
-import java.security.Timestamp;
-import java.util.Date;
+import java.util.List;
 
 import lombok.Data;
 
@@ -22,6 +21,7 @@ public class UserVo {
 	private String user_gender;
 	private String user_hobby;
 	private String user_hiredate;
+	private List deleteArr;
 	
 	private int pageSize; // 보여줄 데이터 수
 	private int pageOffset; // 보여줄 데이터 기준
