@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.board.springboot.code">
+	
+	<select id="selectCodeList" resultType="com.board.springboot.user.vo.CodeVo">
+		SELECT  code_no
+				,code_name
+		FROM code		
+	</select>
+	
+	<select id="selectCodeDtlList" parameterType="com.board.springboot.user.vo.CodeDtlVo" resultType="com.board.springboot.user.vo.CodeDtlVo">
+		SELECT  code_dtl_no
+				,code_dtl_name
+		FROM code_dtl
+		WHERE code_no = #{code_no}
+	</select>
+	
+</mapper>

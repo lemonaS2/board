@@ -1,113 +1,86 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%-- <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%> --%>
 <!DOCTYPE html> 
 <html>
-<!-- <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-<script
-	src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.js"></script>
-합쳐지고 최소화된 최신 CSS
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-부가적인 테마
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
-합쳐지고 최소화된 최신 자바스크립트
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-</head> -->
-<%-- <jsp:include page="../include/header.jsp" /> --%>
 <%@include file="../include/header.jsp" %>
 <body>
 	<div class="panel panel-default">
 		<!-- Default panel contents -->
 		<div class="panel-heading">유저 리스트</div>
-		<div class="panel-body">
-			<span>총 유저수: ${totalCount } 건</span>
-			<button type="button" class="btn btn-info" style="float:right" onclick="fnDelete()">선택삭제</button>
-			<button type="button" class="btn btn-default" style="float:right"><a href="/user/joinForm" style="text-decoration:none">회원가입</a></button>
+		<div align="center">
+			<form id="searchForm" name="searchForm">
+				코드 : <select id="codeList" name="codeList" onchange="fnCodeChange()">
+						<option value="">전체</option>
+						<c:forEach items="${codeList}" var="code">
+							<option value="${code.code_no}">${code.code_name}</option>
+						</c:forEach>
+					  </select>
+				상세코드 : <select id="codeDtlList" name="codeDtlList">
+							<option value="">전체</option>	
+						</select>	  
+				검색 : <input tpye="text" id="search" name="search">
+				<input type="hidden" id="pageNum" name="pageNum" />
+				<button type="button" onclick="fnSearch('1')">검색</button>
+			</form>
 		</div>
-		<table class="table">
-			<thead class="thead-dark">
-				<tr>
-					<th>선택</th>
-					<th>No</th>
-					<th>아이디</th>
-					<th>이름</th>
-					<th>등급</th>
-					<th>성별</th>
-					<th>취미</th>
-					<th>가입일</th>
-				<tr>
-			</thead>
-			<tbody>
-				<c:forEach var="userList" items="${userList}" varStatus="status">
-					<tr>
-						<td><input type="checkbox" id="chk" name="chk" value="${userList.user_id}"></td>
-						<td>${status.count}</td>
-						<td>${userList.user_id}</td>
-						<td>${userList.user_name}</td>
-						<td>${userList.user_grade}</td>
-						<td>${userList.user_gender}</td>
-						<td>${userList.user_hobby}</td>
-						<td>${userList.user_hiredate}</td>
-					</tr>
-				</c:forEach>
-			</tbody>
-		</table>
+		<div id="dataList"></div>
 	</div>
-	<div align="center">
-		<nav>
-		  <ul class="pagination">
-		    <li>
-		      <a href="#" aria-label="Previous">
-		        <span aria-hidden="true">&laquo;</span>
-		      </a>
-		    </li>
-		    <c:forEach var="item" items="${pagingInfo.list }">
-		   		<li><a href="#">${item }</a></li>
-			</c:forEach>
-		    <li>
-		      <a href="#" aria-label="Next">
-		        <span aria-hidden="true">&raquo;</span>
-		      </a>
-		    </li>
-		  </ul>
-		</nav>
-	</div>		
 	
 	<script>
 		$(function(){
-			
+			fnSearch(1);
 		});
 		
-		function fnDelete(){
+		function fnCodeChange(){
+			var selectValue = $("#codeList option:selected").val();
+			console.log(selectValue);
 			
-			var deleteArr = new Array();
-			
-			$("input:checkbox[name=chk]:checked").each(function(){
-				deleteArr.push($(this).val());
+			$.ajax({
+				contentType: "application/json",
+				url: "/user/getCodeDtlList",
+				type: "POST",
+				data: JSON.stringify({"code_no" : selectValue}),
+				dataType: "JSON",
+				success: function(data){
+					$("#codeDtlList option").remove();
+					$("select[name='codeDtlList']").append("<option value=''>선택</option>");
+					$(data).each(function(i){
+						$("select[name='codeDtlList']").append("<option value='"+ data[i].code_dtl_no +"'>" + data[i].code_dtl_name + "</option>");
+					});
+				},error: function(request, status, error){
+					alert("실패");
+				}
 			});
+		}
+		
+		
+		
+		function fnSearch(pageNum){
+			if(!pageNum){
+				$("#pageNum").val(1);
+			}else{
+				$("#pageNum").val(pageNum);
+			}
+			fnSearchAjax();
 			
-			if(deleteArr != ''){
-				console.log(deleteArr);
+		}
+		
+		function fnSearchAjax(){
+			
+			var pageNum = $("#pageNum").val();
+			
+			
+			var params = {
+				pageNum : pageNum
 			}
 			
 			$.ajax({
-				url: "/user/deleteUser",
-				method: "POST",		
-				data: {deleteArr : deleteArr},
-				dataType: "",
+				url: "/user/getUserList",
+				type: "GET",		
+				data: params,
+				dataType: "html",
 				success: function(data){
-					if(data.resultCode == 'SUCCESS'){
-						alert("성공");
-						location.reload();
-					}else if(data.resultCode == 'FAIL'){
-						alert("실패");
-						location.reload();
-					}
+					$("#dataList").html(data);
 				},
 				error: function(request, status, error){
 					

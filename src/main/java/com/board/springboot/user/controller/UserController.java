@@ -17,7 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.board.springboot.support.PagingViewInfo;
+import com.board.springboot.user.service.CodeService;
 import com.board.springboot.user.service.UserService;
+import com.board.springboot.user.vo.CodeDtlVo;
+import com.board.springboot.user.vo.CodeVo;
 import com.board.springboot.user.vo.UserVo;
 
 @RequestMapping("/user")
@@ -28,6 +31,9 @@ public class UserController {
 
 	@Autowired
 	private UserService service;
+	
+	@Autowired
+	private CodeService codeService;
 	
 	@GetMapping("/loginForm")
 	public String loginForm() {
@@ -110,12 +116,25 @@ public class UserController {
 	}
 	
 	@GetMapping("/userList")
-	public String userList(Model model, Map<String, String> paramMap) {
+	public String userList(Model model) {
+		
+		List<CodeVo> codeList = codeService.getCodeList();
+		
+		model.addAttribute("codeList", codeList);
+		
+		return "user/userList";
+	}
+	
+	@GetMapping("/getUserList")
+	public String getUserList(@RequestParam Map<String, String> paramMap, Model model) {
+
+		paramMap.put("pageSize", "5");
+//		paramMap.put("pageNum", "1");
+		
 		UserVo paramVo = new UserVo();
 		
-		paramVo.setPageSize(10);
-		paramVo.setPageOffset(0);
-//		paramVo.setPageOffset(paramVo.getPageSize() * (Integer.parseInt(paramMap.get("pageNum")) -1));
+		paramVo.setPageSize(Integer.parseInt(paramMap.get("pageSize")));
+		paramVo.setPageOffset(paramVo.getPageSize() * (Integer.parseInt(paramMap.get("pageNum")) -1 ) );
 		
 		// 리스트
 		List<UserVo> userList = service.getUserList(paramVo);
@@ -124,14 +143,23 @@ public class UserController {
 		int totalCount = service.getUserListCount(paramVo);
 		
 		
-		PagingViewInfo pagingInfo = new PagingViewInfo(totalCount, 1, 10); 
-//		PagingViewInfo pagingInfo = new PagingViewInfo(totalCount, Integer.parseInt(paramMap.get("pageNum")), Integer.parseInt(paramMap.get("pageSize"))); 
+		PagingViewInfo pagingInfo = new PagingViewInfo(totalCount, Integer.parseInt(paramMap.get("pageNum")), Integer.parseInt(paramMap.get("pageSize"))); 
 		
 		model.addAttribute("userList", userList);
-		model.addAttribute("totalCount", totalCount);
+		model.addAttribute("pageSize", paramMap.get("pageSize"));
+		model.addAttribute("pageNum", paramMap.get("pageNum"));
 		model.addAttribute("pagingInfo", pagingInfo);
 		
-		return "user/userList";
+		return "user/userListAsync";
+	}
+	
+	@PostMapping("getCodeDtlList")
+	@ResponseBody
+	public List<CodeDtlVo> getCodeDtlList(@RequestBody CodeDtlVo vo){
+		
+		List<CodeDtlVo> codeDtlList = codeService.getCodeDtlList(vo);
+		
+		return codeDtlList;
 	}
 	
 	@ResponseBody

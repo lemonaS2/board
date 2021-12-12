@@ -21,9 +21,8 @@
 				, user_hobby
 				, to_char(user_hiredate, 'YYYY-MM-DD') as user_hiredate
 		FROM USERS
+		ORDER BY user_hiredate desc
 		LIMIT #{pageSize} OFFSET #{pageOffset}
-<!-- 		ORDER BY user_hiredate desc; -->
-<!-- 		LIMIT 10 OFFSET 10 -->
 	</select>
 	
 	<select id="selectListCount" parameterType="com.board.springboot.user.vo.UserVo" resultType="Integer">
