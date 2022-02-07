@@ -12,24 +12,36 @@
 </head>
 <body>
 	<h1>회원가입</h1>
-	<form id="joinForm" name="joinForm">
-		아이디 : <input type="text" id="userId" name="userId">
+	<form id="joinForm" name="joinForm" method="POST" enctype="multipart/form-data">
+		아이디 : <input type="text" id="user_id" name="user_id">
 		<button type="button" onclick="fnCheckId()">아이디 체크</button><span id="checkId"></span><br>
-		비밀번호 : <input type="password" id="userPassword" name="userPassword">  <br>
-		이름 : <input type="text" id="userName" name="userName"> <br>
-		등급 : <select id="userGrade" name="userGrade">
+		비밀번호 : <input type="password" id="user_password" name="user_password">  <br>
+		이름 : <input type="text" id="user_name" name="user_name"> <br>
+		등급 : <select id="user_grade" name="user_grade">
 				<option values="user">사용자</option>
 				<option values="admin">관리자</option>
 			 </select> <br>
-		성별 : <label><input type="radio" id="userGender" name="userGender" value="남" checked>남</label>
-			<label><input type="radio" id="userGender" name="userGender" value="여">여</label>
+		성별 : <label><input type="radio" id="user_gender" name="user_gender" value="남" checked>남</label>
+			<label><input type="radio" id="user_gender" name="user_gender" value="여">여</label>
 		 <br>
-		취미 : <label><input type="checkbox" id="userHobby" name="userHobby" value="game">게임</label>
-		<label><input type="checkbox" id="userHobby" name="userHobby" value="sleep">잠</label>
-		<label><input type="checkbox" id="userHobby" name="userHobby" value="study">공부</label>
+		취미 : <label><input type="checkbox" id="user_hobby" name="user_hobby" value="game">게임</label>
+		<label><input type="checkbox" id="user_hobby" name="user_hobby" value="sleep">잠</label>
+		<label><input type="checkbox" id="user_hobby" name="user_hobby" value="study">공부</label>
 		<br>
-<!-- 		일자: <input type="text" id="user_hiredate" name="user_hiredate"><br><br> -->
-	
+		팝업 : <button onclick="fnPopUp()">팝업</button>
+		<br>
+		일자: <input type="text" id="user_hiredate" name="user_hiredate">
+		시간 : <select id="hour" name="hour">
+			<%for(int i=0; i<=24; i++){ %>
+				<option value="<%=i%>"><%=i%></option>
+			<%} %>
+		</select>
+		분 : <select id="minute" name="minute">
+			<%for(int i=0; i<=59; i++){ %>
+				<option value="<%=i%>"><%=i%></option>
+			<%} %>
+		</select>
+		<br><br>
 		<button type="button" onclick="fnJoin()">회원가입</button>
 		<button type="reset">초기화</button>
 		<a href="/user/loginForm"><button type="button">뒤로</button></a>
@@ -65,10 +77,10 @@
 	
 	function fnCheckId(){
 		
-		var userId = $("#userId").val();
+		var user_id = $("#user_id").val();
 		
 		param = {
-			userId : userId	
+			user_id : user_id	
 		}
 		
 		$.ajax({
@@ -94,24 +106,36 @@
 	
 	function fnJoin(){
 		
+		var form = $("#joinForm")[0];
+		var formData = new FormData(form);
 		
+		var d = $("#user_hiredate").val();
+		var h = $("#hour").val();
+		var m = $("#minute").val();
 		
-		var joinForm = {
-			userId: $("#userId").val(),
-			userPassword: $("#userPassword").val(),
-			userName: $("#userName").val(),
-			userGrade: $("#userGrade").val(),
-			userGender: $('input[name="userGender"]:checked').val(),
-			userHobby: $('input[name="userHobby"]:checked').val()
+		formData.append("dateAll", d +" "+ h+":"+m);
+		
+// 		var joinForm = {
+// 			userId: $("#userId").val(),
+// 			userPassword: $("#userPassword").val(),
+// 			userName: $("#userName").val(),
+// 			userGrade: $("#userGrade").val(),
+// 			userGender: $('input[name="userGender"]:checked').val(),
+// 			userHobby: $('input[name="userHobby"]:checked').val()
+// 		}
+		
+		// FormData의 값 확인 
+		for (var pair of formData.entries()) { 
+			console.log(pair[0]+ ', ' + pair[1]); 
 		}
-		
-		console.log("joinForm= " + joinForm);
+
 		
 		$.ajax({
 			url: "/user/join",
-			method: "POST",
-			data: joinForm,
-			dataType : "",
+			type: "POST",
+			data: formData,
+			contentType: false,
+			processData: false,
 			success: function(data){
 				if(data == '성공'){
 					location.href="/user/userList";
@@ -124,6 +148,10 @@
 			}
 		});
 		
+	}
+	
+	function fnPopUp(){
+		window.open("/user/openPopUp", "_blank", "width=1400, height=600, scrollbars=yes, resizable=yes");
 	}
 	
 	</script>

@@ -9,6 +9,10 @@
 		<div class="panel-heading">유저 리스트</div>
 		<div align="center">
 			<form id="searchForm" name="searchForm">
+				취미 : <label><input type="checkbox" id="userHobby" name="userHobby" value="">전체</label>
+					  <label><input type="checkbox" id="userHobby" name="userHobby" value="game">게임</label>
+					  <label><input type="checkbox" id="userHobby" name="userHobby" value="sleep">잠</label>
+					  <label><input type="checkbox" id="userHobby" name="userHobby" value="study">공부</label>
 				코드 : <select id="codeList" name="codeList" onchange="fnCodeChange()">
 						<option value="">전체</option>
 						<c:forEach items="${codeList}" var="code">

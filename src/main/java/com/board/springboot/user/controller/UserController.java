@@ -1,5 +1,8 @@
 package com.board.springboot.user.controller;
 
+import java.security.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -70,6 +74,24 @@ public class UserController {
 		return "user/joinForm";
 	}
 	
+	@GetMapping("/joinFormDtl/{id}")
+	public String joinFormDtl(@PathVariable String id, Model model) {
+		
+		UserVo vo = new UserVo();
+		vo.setUser_id(id);
+		
+		UserVo data = service.selectJoinInfo(vo);
+		
+		logger.info("date " + data.getUser_hiredate());
+		
+//		SimpleDateFormat ymd = new SimpleDateFormat("yyyy-MM-dd");
+//		data.setSsdt(ymd.format(date));
+		
+		model.addAttribute("data", data);
+		
+		return "user/joinFormDtl";
+	}
+	
 	@ResponseBody
 	@GetMapping("/checkId")
 	public String checkId(@RequestParam Map<String, String> paramMap, Model model) {
@@ -94,17 +116,18 @@ public class UserController {
 	
 	@ResponseBody
 	@PostMapping("/join")
-	public String join(@RequestParam Map<String, String> paramMap) {
+	public String join(UserVo vo) {
+//		
+//		UserVo vo2 = new UserVo();
+//		vo2.setUser_id(vo.getUser_id());
+//		vo2.setUser_password(vo.getUser_password());
+//		vo2.setUser_name(vo.getUser_name());
+//		vo2.setUser_grade(vo.getUser_grade());
+//		vo2.setUser_gender(vo.getUser_gender());
+//		vo2.setUser_hobby(vo.getUser_hobby());
+//		vo2.setDateAll(vo.getDateAll());
 		
-		logger.info("join= " + paramMap);
-		
-		UserVo vo = new UserVo();
-		vo.setUser_id(paramMap.get("userId"));
-		vo.setUser_password(paramMap.get("userPassword"));
-		vo.setUser_name(paramMap.get("userName"));
-		vo.setUser_grade(paramMap.get("userGrade"));
-		vo.setUser_gender(paramMap.get("userGender"));
-		vo.setUser_hobby(paramMap.get("userHobby"));
+		logger.info("join= " + vo.toString());
 		
 		int result = service.saveUserInfo(vo);
 		
@@ -194,5 +217,20 @@ public class UserController {
 		
 		return resultMap;
 	}
+	
+	@GetMapping("/openPopUp")
+	public String openPopUp(Model model) {
+		
+		UserVo paramVo = new UserVo();
+		paramVo.setPageSize(10);
+		paramVo.setPageOffset(0);
+		
+		List<UserVo> userList = service.getUserList(paramVo);
+		
+		model.addAttribute("userList", userList);
+		
+		return "user/popUp";
+	}
+	
 	
 }

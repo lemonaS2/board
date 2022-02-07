@@ -37,4 +37,8 @@ public class UserDao {
 	public Integer deleteUser(String[] deleteArr) {
 		return session.delete("com.board.springboot.user.deleteUser", deleteArr);
 	}
+	
+	public UserVo selectJoinInfo(UserVo vo) {
+		return session.selectOne("com.board.springboot.user.selectJoinInfo", vo);
+	}
 }

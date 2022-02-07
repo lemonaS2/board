@@ -62,7 +62,7 @@
 			,#{user_grade}
 			,#{user_gender}
 			,#{user_hobby}
-			,current_timestamp
+			,#{dateAll}
 		)
 		
 	</insert>
@@ -74,5 +74,17 @@
 			#{item}
 		</foreach>
 	</delete>
+	
+	<select id="selectJoinInfo" parameterType="com.board.springboot.user.vo.UserVo" resultType="com.board.springboot.user.vo.UserVo">
+		SELECT 	user_id
+				,user_name
+				,user_password
+				,user_grade
+				,user_gender
+				,user_hobby
+				,user_hiredate
+		FROM USERS
+		WHERE user_id = #{user_id}		
+	</select>
 	
 </mapper>

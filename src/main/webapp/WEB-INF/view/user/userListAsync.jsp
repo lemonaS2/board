@@ -27,7 +27,7 @@
 					<td><input type="checkbox" id="chk" name="chk" value="${userList.user_id}"></td>
 					<td>${status.count}</td>
 					<td>${userList.user_id}</td>
-					<td>${userList.user_name}</td>
+					<td><a href="/user/joinFormDtl/${userList.user_id}">${userList.user_name}</a></td>
 					<td>${userList.user_grade}</td>
 					<td>${userList.user_gender}</td>
 					<td>${userList.user_hobby}</td>

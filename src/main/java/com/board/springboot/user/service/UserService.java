@@ -8,6 +8,8 @@ public interface UserService {
 	
 	public List<UserVo> getUserList(UserVo vo);
 	
+	public UserVo selectJoinInfo(UserVo vo);
+	
 	public Integer getLoginCheck(UserVo vo);
 	
 	public Integer getCheckId(String id);

@@ -47,5 +47,10 @@ public class UserServiceImpl implements UserService {
 		return userDao.deleteUser(deleteArr);
 	}
 
+	@Override
+	public UserVo selectJoinInfo(UserVo vo) {
+		return userDao.selectJoinInfo(vo);
+	}
+
 	
 }
